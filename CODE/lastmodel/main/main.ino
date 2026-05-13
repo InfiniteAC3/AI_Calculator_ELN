@@ -118,6 +118,7 @@ void loop() {
     case MODE_IA:
       if (k1) iaMode.onCalcKey(k1);
       if (k2) iaMode.onSciKey(k2);
+      iaMode.update(); // défilement automatique LCD1 (expr) + LCD2 (explication)
       break;
   }
 }

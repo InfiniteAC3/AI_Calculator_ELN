@@ -175,6 +175,67 @@ public:
     lcd1.print(F("_    "));
   }
 
+  // ---- LCD1 spécifique MODE IA ----
+  // Ligne 0 : expression avec fenêtre glissante (scrollOffset)
+  // Ligne 1 : résultat aligné à droite  "           =3.14"
+  void showIAExpr(const char* expr, uint8_t scrollOffset,
+                  const char* result = nullptr) {
+    lcd1.clear();
+
+    // --- Ligne 0 : fenêtre de 16 chars dans l'expression ---
+    lcd1.setCursor(0, 0);
+    uint8_t len = strlen(expr);
+    if (len == 0) {
+      lcd1.print(F("f(x)=?          "));
+    } else {
+      uint8_t start = scrollOffset;
+      if (start >= len) start = 0;
+      for (uint8_t i = start; i < start + 16 && i < len; i++) {
+        lcd1.print(expr[i]);
+      }
+      // Indicateur de défilement si expr trop longue
+      if (len > 16) {
+        lcd1.setCursor(15, 0);
+        lcd1.print(start + 16 < len ? '>' : '<');
+      }
+    }
+
+    // --- Ligne 1 : résultat aligné à droite ---
+    lcd1.setCursor(0, 1);
+    if (result && result[0] != '\0') {
+      uint8_t rlen = strlen(result) + 1; // +1 pour '='
+      uint8_t pad  = (rlen < 16) ? (16 - rlen) : 0;
+      for (uint8_t i = 0; i < pad; i++) lcd1.print(' ');
+      lcd1.print('=');
+      for (uint8_t i = 0; i < 15 && result[i]; i++) lcd1.print(result[i]);
+    } else {
+      lcd1.print(F("                "));
+    }
+  }
+
+  // ---- LCD2 spécifique MODE IA : ligne d'explication ----
+  // Ligne 0 : "SIN (2/5) ►" ou "SIN (2/5) ◄"
+  // Ligne 1 : texte de l'étape courante
+  void showIAExpl(const char* title, const char* line,
+                  uint8_t idx, uint8_t total,
+                  bool scrollFwd, bool scrollBwd) {
+    lcd2.clear();
+    // Ligne 0 : titre + numéro + indicateur de défilement
+    lcd2.setCursor(0, 0);
+    _printTrunc(lcd2, title, 8);
+    lcd2.print(F(" ("));
+    lcd2.print(idx + 1);
+    lcd2.print(F("/"));
+    lcd2.print(total);
+    lcd2.print(F(")"));
+    if (scrollFwd)      lcd2.print(F(" >"));
+    else if (scrollBwd) lcd2.print(F(" <"));
+
+    // Ligne 1 : texte de l'étape
+    lcd2.setCursor(0, 1);
+    _printTrunc(lcd2, line, 16);
+  }
+
   void clearOverflow() { _overflowActive = false; }
   void clearAll() {
     lcd1.clear(); lcd2.clear();
