@@ -1,6 +1,6 @@
 #pragma once
 // ============================================================
-//  SANDERS IA — mode_ia.h  (v2.1)
+//  CALCU IA — mode_ia.h  (v2.1)
 //
 //  LCD1 : expression défilante (ligne 0) + résultat à droite (ligne 1)
 //  LCD2 : explication TOUJOURS visible, navigable via :

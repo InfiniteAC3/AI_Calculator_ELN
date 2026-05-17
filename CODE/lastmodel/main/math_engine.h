@@ -1,6 +1,6 @@
 #pragma once
 // ============================================================
-//  SANDERS IA — math_engine.h
+//  CALCU IA — math_engine.h
 //  Parser récursif, fonctions scientifiques, substitution x
 // ============================================================
 #include <math.h>
@@ -27,6 +27,13 @@ void formatNum(double v, char* buf, uint8_t bufSize = RES_MAX) {
   if (isnan(v))  { strncpy(buf, "NaN",  bufSize); return; }
   if (isinf(v))  { strncpy(buf, v > 0 ? "+Inf" : "-Inf", bufSize); return; }
   if (v == 0.0)  { strncpy(buf, "0", bufSize); return; }
+
+  // FIX precision AVR : pow(12,2) renvoie 143.99998 au lieu de 144
+  // -> arrondir si tres proche d'un entier
+  double rounded = round(v);
+  if (rounded != 0.0 && abs(v - rounded) < 1e-4 && abs(rounded) < 1e9) {
+    v = rounded;
+  }
 
   // Entier exact dans plage raisonnable
   long lv = (long)v;
@@ -123,9 +130,22 @@ namespace MathParser {
     skipSpaces();
     if (peek() == '^') {
       skip();
-      double exp = parseUnary(); // associativité droite
+      double exp = parseUnary(); // associativite droite
       if (base < 0 && exp != (int)exp) { setError("Base neg puiss frac"); return 0; }
-      base = pow(base, exp);
+      // FIX precision AVR : utiliser multiplication entiere si exposant entier
+      // pow() d'avr-libc est imprecis (ex: pow(12,2)=143.99998)
+      int iexp = (int)exp;
+      if ((double)iexp == exp && iexp >= 0 && iexp <= 30) {
+        double r = 1.0;
+        for (int k = 0; k < iexp; k++) r *= base;
+        base = r;
+      } else if ((double)iexp == exp && iexp < 0 && iexp >= -30) {
+        double r = 1.0;
+        for (int k = 0; k < -iexp; k++) r *= base;
+        base = 1.0 / r;
+      } else {
+        base = pow(base, exp);
+      }
     }
     return base;
   }

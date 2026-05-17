@@ -1,6 +1,6 @@
 #pragma once
 // ============================================================
-//  SANDERS IA — display_mgr.h
+//  CALCU IA — display_mgr.h
 //  Gestionnaire des 2 écrans LCD I2C (0x27 et 0x21)
 // ============================================================
 #include <LiquidCrystal_I2C.h>
@@ -27,7 +27,7 @@ public:
 
   void splash() {
     lcd1.clear();
-    lcd1.setCursor(2, 0); lcd1.print(F("SANDERS  IA"));
+    lcd1.setCursor(2, 0); lcd1.print(F("CALCU  IA"));
     lcd1.setCursor(0, 1); lcd1.print(F("Calculatrice v2.0"));
     lcd2.clear();
     lcd2.setCursor(1, 0); lcd2.print(F("--- BIENVENUE ---"));

@@ -1,6 +1,6 @@
 #pragma once
 // ============================================================
-//  SANDERS IA — mode_advanced.h
+// CALCU IA — mode_advanced.h
 //  MODE MATRIX : Addition, Soustraction, Multiplication,
 //                Déterminant, Inverse (2x2 et 3x3)
 //  MODE EQUATION : Linéaire (ax+b=0) et Quadratique (ax²+bx+c=0)

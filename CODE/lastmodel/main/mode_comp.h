@@ -1,6 +1,6 @@
 #pragma once
 // ============================================================
-//  SANDERS IA — mode_comp.h
+//  CALCU IA — mode_comp.h
 //  Mode COMP : calculatrice classique + fonctions scientifiques
 //  LCD1 : expression + résultat
 //  LCD2 : info ANS, mode, débordement
